@@ -1,108 +1,67 @@
 # ReviveOps AI - Development Roadmap
 
-## Project Timeline (6 Days)
+This roadmap details the timeline and current progress of the **ReviveOps AI** Recovery Operations Center.
 
-### Day 1 - Project Foundation
+---
 
--   Setup frontend and backend project structure.
--   Configure FastAPI backend.
--   Configure React + TypeScript frontend.
--   Setup Tailwind CSS and shadcn/ui.
--   Establish API communication between frontend and backend.
--   Verify local development environments are working.
+## Timeline & Milestones
 
-**Deliverable:** Working project foundation with frontend and backend
-connected.
+### Day 1 - Project Foundation [COMPLETED]
+- Setup frontend and backend project structure.
+- Configure FastAPI backend, Pydantic models, and CORS policies.
+- Configure React + TypeScript + Vite frontend.
+- Configure Tailwind CSS v3 and shadcn/ui.
+- Establish baseline API client-server communication.
+- **Deliverable:** Working connected repository baseline.
 
-------------------------------------------------------------------------
+---
 
-### Day 2 - Inventory Processing
+### Day 2 - Inventory Processing [COMPLETED]
+- Implement CSV file uploader in UI.
+- Implement robust CSV parsing and datatype validation on the FastAPI backend.
+- Build asset models matching column definitions.
+- Display uploaded inventory specs dynamically in layout cards and details tables.
+- **Deliverable:** Live file upload, parsing, and telemetry display.
 
--   Implement CSV upload functionality.
--   Implement CSV parsing and validation.
--   Build data models for recoverable assets.
--   Display uploaded inventory information on the dashboard.
+---
 
-**Deliverable:** Users can upload and process recoverable asset
-inventories.
+### Day 3 - Recovery Intelligence Engine [PENDING / MOCKED]
+- Implement the Recovery Assessment Unit (Condition & severity).
+- Implement the Recovery Decision Unit (Repair, Recycle, Reuse, Resell, Scrap).
+- Integrate Groq LLM and LangChain pipelines.
+- Generate autonomous decisions.
+- **Deliverable:** Live AI decision classification logic.
 
-------------------------------------------------------------------------
+---
 
-### Day 3 - Recovery Intelligence Engine
+### Day 4 - Recovery Planning Engine [PENDING / MOCKED]
+- Implement the Recovery Priority Unit (Efficiency score sorting).
+- Implement the Recovery Operations Unit (Timeline and analytics generation).
+- Output sorted recovery sequence.
+- **Deliverable:** Live operations prioritizer service.
 
--   Implement the Recovery Assessment Unit.
--   Implement the Recovery Decision Unit.
--   Integrate Groq and LangChain.
--   Generate autonomous recovery decisions for all assets.
+---
 
-**Deliverable:** The AI can determine the optimal recovery pathway for
-each asset.
+### Day 5 - Dashboard and Analytics [COMPLETED]
+- Build the final Recovery Operations Center user interface.
+- Integrate mock cards for inventory overview metrics (Repair, Recycle, etc.).
+- Integrate Today's Top Priorities list.
+- Integrate Recovery Analytics dashboard widgets.
+- Integrate mock AI analysis justification boxes.
+- Integrate Download Report button (labeled COMING SOON).
+- **Deliverable:** Final dashboard user interface with mock analytics.
 
-------------------------------------------------------------------------
+---
 
-### Day 4 - Recovery Planning Engine
+### Day 6 - Finalization and Presentation [PENDING]
+- End-to-end integration and sanity checks.
+- Compile presentation documents: Lean Canvas, PowerPoint slides, Concept Note.
+- Deploy frontend to Vercel and backend to Render.
+- Demo rehearsals.
+- **Deliverable:** Submission-ready product.
 
--   Implement the Recovery Priority Unit.
--   Implement the Recovery Operations Unit.
--   Generate priority rankings.
--   Generate the daily recovery operations plan.
+---
 
-**Deliverable:** The AI produces prioritized recovery plans
-autonomously.
-
-------------------------------------------------------------------------
-
-### Day 5 - Dashboard and Analytics
-
--   Build the Recovery Operations Dashboard.
--   Implement analytics cards and recovery insights.
--   Implement report generation capabilities.
--   Deploy frontend to Vercel and backend to Render.
-
-**Deliverable:** Fully functional dashboard with deployment completed.
-
-------------------------------------------------------------------------
-
-### Day 6 - Finalization and Presentation
-
--   Perform end-to-end testing.
--   Fix bugs and polish the user experience.
--   Complete project documentation.
--   Prepare the Lean Canvas.
--   Prepare the Concept Note.
--   Prepare the PowerPoint presentation.
--   Conduct demo rehearsals.
-
-**Deliverable:** Competition-ready project submission.
-
-------------------------------------------------------------------------
-
-## Scope Freeze Policy
-
-The following features are intentionally excluded from this MVP:
-
--   Authentication
--   OCR and image processing
--   Multi-user support
--   Real-time external APIs
--   Mobile applications
--   Inventory forecasting
--   Supply chain management
--   Additional AI workflows outside recovery operations
-
-No new features will be added unless all planned milestones are
-completed successfully.
-
-------------------------------------------------------------------------
-
-## Success Criteria
-
-The project will be considered complete when:
-
--   CSV uploads are fully functional.
--   Recovery decisions are generated autonomously.
--   Recovery priorities are generated successfully.
--   Daily recovery plans are produced accurately.
--   The dashboard displays all operational insights correctly.
--   The application is successfully deployed.
--   All documentation and presentation materials are complete.
+## Project Policy & Freezer
+- **Scope Freeze**: Intentional exclusion of authentication, databases, and compliance OCR.
+- **Success Criteria**: Completed when uploader, AI logic, and report downloads are active in deployment.
