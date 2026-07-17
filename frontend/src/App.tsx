@@ -177,9 +177,9 @@ export default function App() {
     return "bg-rose-500/10 text-rose-400 border-rose-500/20";
   };
 
-  // Helper: Retrieve dynamic totals if inventory is uploaded, fallback to mock values on initial load
-  const getOverviewCount = (type: string, fallback: number) => {
-    if (assets.length === 0) return fallback;
+  // Helper: Retrieve dynamic totals if inventory is uploaded, fallback to 0 on initial load
+  const getOverviewCount = (type: string) => {
+    if (assets.length === 0) return 0;
     const typeUpper = type.toUpperCase();
     if (typeUpper === "RECOVERABLE") {
       return assets.filter(a => a.recoverable?.toUpperCase() === "YES").length;
@@ -193,66 +193,34 @@ export default function App() {
   // Recovery Analytics dynamic configurations
   const displayExpectedValue = metrics 
     ? new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(metrics.expected_value_recovery)
-    : "₹1,85,000";
-  const displayBudgetPercent = metrics ? metrics.budget_utilization : 96;
-  const displayHoursStr = metrics ? `${metrics.hours_utilization} hrs` : "7.5 / 8 hrs";
+    : "₹0";
+  const displayBudgetPercent = metrics ? metrics.budget_utilization : 0;
+  const displayHoursStr = metrics ? `${metrics.hours_utilization} hrs` : `0.0 / ${hoursInput} hrs`;
   
   const getHoursPercent = () => {
-    if (!metrics) return 93.75;
+    if (!metrics) return 0;
     try {
       const parts = metrics.hours_utilization.split("/");
       const spent = parseFloat(parts[0]);
       const total = parseFloat(parts[1]);
       return total > 0 ? (spent / total) * 100 : 0;
     } catch {
-      return 50;
+      return 0;
     }
   };
   const displayHoursPercent = getHoursPercent();
 
   const displayWastePercent = assets.length > 0
     ? Math.round((assets.filter(a => a.decision?.toUpperCase() !== "SCRAP").length / assets.length) * 100)
-    : 72;
+    : 0;
 
-  // Render Top Priorities sidebar based on scheduled plan assets (fallback to mock)
+  // Render Top Priorities sidebar based on scheduled plan assets (empty list prompt on load)
   const renderPriorities = () => {
     if (plan.length === 0) {
       return (
-        <>
-          <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex justify-between items-center">
-            <div className="space-y-1">
-              <span className="text-[9px] uppercase tracking-wider text-[#aa3bff] font-semibold font-mono">Priority #1</span>
-              <h4 className="text-xs font-semibold text-slate-200">Dell Laptop</h4>
-              <p className="text-[10px] text-slate-400">Decision: <span className="text-blue-400 font-mono">Repair</span></p>
-            </div>
-            <div className="text-right">
-              <span className="text-xl font-bold font-mono tracking-tight bg-gradient-to-tr from-amber-400 to-[#aa3bff] bg-clip-text text-transparent">98</span>
-              <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Score</p>
-            </div>
-          </div>
-          <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex justify-between items-center">
-            <div className="space-y-1">
-              <span className="text-[9px] uppercase tracking-wider text-[#aa3bff] font-semibold font-mono">Priority #2</span>
-              <h4 className="text-xs font-semibold text-slate-200">MacBook Air</h4>
-              <p className="text-[10px] text-slate-400">Decision: <span className="text-blue-400 font-mono">Repair</span></p>
-            </div>
-            <div className="text-right">
-              <span className="text-xl font-bold font-mono tracking-tight bg-gradient-to-tr from-amber-400 to-[#aa3bff] bg-clip-text text-transparent">96</span>
-              <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Score</p>
-            </div>
-          </div>
-          <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex justify-between items-center">
-            <div className="space-y-1">
-              <span className="text-[9px] uppercase tracking-wider text-[#aa3bff] font-semibold font-mono">Priority #3</span>
-              <h4 className="text-xs font-semibold text-slate-200">HP Printer</h4>
-              <p className="text-[10px] text-slate-400">Decision: <span className="text-emerald-400 font-mono">Recycle</span></p>
-            </div>
-            <div className="text-right">
-              <span className="text-xl font-bold font-mono tracking-tight bg-gradient-to-tr from-amber-400 to-[#aa3bff] bg-clip-text text-transparent">91</span>
-              <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Score</p>
-            </div>
-          </div>
-        </>
+        <div className="p-4 border border-slate-900 bg-[#0B0F19]/20 rounded-lg text-center text-slate-500 text-xs font-mono">
+          No high-priority assets scheduled yet. Upload inventory to populate priorities list.
+        </div>
       );
     }
 
@@ -434,7 +402,7 @@ export default function App() {
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-6 mt-8">
         
-        {/* SECTION 2: RECOVERY OVERVIEW CARDS (Mock Data Grid -> Live Data) */}
+        {/* SECTION 2: RECOVERY OVERVIEW CARDS (Live Data) */}
         <section className="mb-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             
@@ -447,7 +415,7 @@ export default function App() {
                 </div>
                 <div className="mt-2">
                   <span className="text-2xl font-semibold font-mono tracking-tight text-white">
-                    {getOverviewCount("RECOVERABLE", 53)}
+                    {getOverviewCount("RECOVERABLE")}
                   </span>
                   <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Total Assets</p>
                 </div>
@@ -463,7 +431,7 @@ export default function App() {
                 </div>
                 <div className="mt-2">
                   <span className="text-2xl font-semibold font-mono tracking-tight text-blue-400">
-                    {getOverviewCount("REPAIR", 25)}
+                    {getOverviewCount("REPAIR")}
                   </span>
                   <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Assigned</p>
                 </div>
@@ -479,7 +447,7 @@ export default function App() {
                 </div>
                 <div className="mt-2">
                   <span className="text-2xl font-semibold font-mono tracking-tight text-emerald-400">
-                    {getOverviewCount("RECYCLE", 10)}
+                    {getOverviewCount("RECYCLE")}
                   </span>
                   <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Assigned</p>
                 </div>
@@ -495,7 +463,7 @@ export default function App() {
                 </div>
                 <div className="mt-2">
                   <span className="text-2xl font-semibold font-mono tracking-tight text-violet-400">
-                    {getOverviewCount("REUSE", 8)}
+                    {getOverviewCount("REUSE")}
                   </span>
                   <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Assigned</p>
                 </div>
@@ -511,7 +479,7 @@ export default function App() {
                 </div>
                 <div className="mt-2">
                   <span className="text-2xl font-semibold font-mono tracking-tight text-amber-400">
-                    {getOverviewCount("RESELL", 7)}
+                    {getOverviewCount("RESELL")}
                   </span>
                   <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Assigned</p>
                 </div>
@@ -527,7 +495,7 @@ export default function App() {
                 </div>
                 <div className="mt-2">
                   <span className="text-2xl font-semibold font-mono tracking-tight text-rose-400">
-                    {getOverviewCount("SCRAP", 3)}
+                    {getOverviewCount("SCRAP")}
                   </span>
                   <p className="text-[9px] uppercase tracking-wider text-slate-500 font-mono">Assigned</p>
                 </div>
@@ -537,7 +505,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* Dashboard Content split: Left is Upload & Telemetry, Right is Control panel & mock insights */}
+        {/* Dashboard Content split: Left is Upload & Telemetry, Right is Control panel */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Left Column (Upload & Parsed telemetry list) */}
@@ -696,7 +664,7 @@ export default function App() {
 
                   {/* Fallback indicator alert banner */}
                   {isFallbackMode && (
-                    <div className="flex items-center gap-1.5 text-amber-400 text-[10px] font-mono bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                    <div className="flex items-center gap-1.5 text-amber-400 text-[10px] font-mono bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/20">
                       <AlertTriangle className="w-3 h-3 shrink-0" />
                       <span>AI Heuristic Fallback Active</span>
                     </div>
@@ -924,7 +892,7 @@ export default function App() {
               </CardContent>
             </Card>
 
-            {/* SECTION 5: AI RECOVERY ANALYSIS SECTION (Mock AI Explanations) */}
+            {/* SECTION 5: AI RECOVERY ANALYSIS SECTION (Mock AI Explanations -> Live only) */}
             <Card className="bg-[#0B0F19]/65 border-slate-900 shadow-lg relative overflow-hidden">
               {/* Subtle top glow to show AI branding */}
               <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#aa3bff]/60 to-transparent" />
@@ -938,23 +906,29 @@ export default function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-4 pt-2 space-y-3 text-xs leading-relaxed">
-                
-                {/* Explanation #1 */}
-                <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex gap-2.5 items-start">
-                  <ShieldCheck className="w-4 h-4 text-[#aa3bff] mt-0.5 shrink-0" />
-                  <p className="text-slate-300 text-[11px]">
-                    The AI determined that repairing the <span className="text-white font-medium">Dell Laptop</span> provides the highest value recovery while maintaining operational constraints.
-                  </p>
-                </div>
+                {assets.length === 0 ? (
+                  <div className="p-4 border border-slate-900 bg-[#0B0F19]/20 rounded-lg text-center text-slate-500 text-xs font-mono">
+                    AI explanation logs will generate once inventory is uploaded.
+                  </div>
+                ) : (
+                  <>
+                    {/* Explanation #1 */}
+                    <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex gap-2.5 items-start">
+                      <ShieldCheck className="w-4 h-4 text-[#aa3bff] mt-0.5 shrink-0" />
+                      <p className="text-slate-300 text-[11px]">
+                        The AI determined that repairing the <span className="text-white font-medium">Dell Laptop</span> provides the highest value recovery while maintaining operational constraints.
+                      </p>
+                    </div>
 
-                {/* Explanation #2 */}
-                <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex gap-2.5 items-start">
-                  <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-                  <p className="text-slate-300 text-[11px]">
-                    The AI recommends recycling the <span className="text-white font-medium">Plastic Chair</span> because the repair cost exceeds its estimated recovery value.
-                  </p>
-                </div>
-
+                    {/* Explanation #2 */}
+                    <div className="bg-slate-950/40 p-3 rounded border border-slate-900 flex gap-2.5 items-start">
+                      <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                      <p className="text-slate-300 text-[11px]">
+                        The AI recommends recycling the <span className="text-white font-medium">Plastic Chair</span> because the repair cost exceeds its estimated recovery value.
+                      </p>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
 
